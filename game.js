@@ -16,7 +16,7 @@ const eventPool = {
     1: [ // 第1关：日常小确丧
         {
             title: "房租涨价",
-            desc: "房东突然通知你,下个月房租涨20%。理由是"市场行情"。",
+            desc: "房东突然通知你,下个月房租涨20%。理由是\"市场行情\"。",
             choices: [
                 { text: "忍了,继续租", impact: { stress: 5 } },
                 { text: "搬家找便宜的", impact: { cash: -0.5, dignity: -5 } },
