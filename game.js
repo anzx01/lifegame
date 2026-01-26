@@ -345,18 +345,56 @@ function showSettlement() {
 function shareResult() {
     const text = `我在"我还能撑多久？"中撑了${gameState.level - 1}关！你能做得更好吗？`;
 
+    // 优先使用Web Share API（移动端）
     if (navigator.share) {
         navigator.share({
             title: '我还能撑多久？',
             text: text,
             url: window.location.href
-        }).catch(err => console.log('分享失败', err));
-    } else {
-        // 复制到剪贴板
-        navigator.clipboard.writeText(text).then(() => {
-            alert('战绩已复制到剪贴板！');
+        }).then(() => {
+            console.log('分享成功');
+        }).catch(err => {
+            console.log('分享取消或失败', err);
+            // 如果分享失败，尝试复制到剪贴板
+            copyToClipboard(text);
         });
+    } else {
+        // 桌面端使用剪贴板
+        copyToClipboard(text);
     }
+}
+
+// 复制到剪贴板
+function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('✅ 战绩已复制到剪贴板！\n\n' + text);
+        }).catch(err => {
+            console.error('复制失败', err);
+            // 降级方案：使用传统方法
+            fallbackCopy(text);
+        });
+    } else {
+        // 降级方案
+        fallbackCopy(text);
+    }
+}
+
+// 降级复制方案
+function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+        document.execCommand('copy');
+        alert('✅ 战绩已复制到剪贴板！\n\n' + text);
+    } catch (err) {
+        alert('❌ 复制失败，请手动复制：\n\n' + text);
+    }
+    document.body.removeChild(textarea);
 }
 
 // 重新开始
