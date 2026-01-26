@@ -449,6 +449,72 @@ body {
     text-align: center;
 }
 
+/* 称号卡片 */
+.shame-tag-card {
+    padding: 20px;
+    background: linear-gradient(135deg, #7C3AED 0%, #2563EB 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 24px rgba(124, 58, 237, 0.3);
+}
+
+.tag-icon {
+    font-size: 48px;
+}
+
+.tag-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tag-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tag-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+/* 分享预览卡片 */
+.share-preview-card {
+    padding: 20px;
+    background: #18181B;
+    border: 1px solid #27272A;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.preview-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+.preview-content {
+    font-size: 14px;
+    font-weight: 500;
+    color: #A1A1AA;
+    line-height: 1.8;
+    white-space: pre-line;
+    padding: 16px;
+    background: #0A0A0A;
+    border-radius: 12px;
+    border: 1px solid #27272A;
+}
+
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;

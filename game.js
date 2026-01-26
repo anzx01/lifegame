@@ -311,62 +311,64 @@ function checkGameOver() {
 function showSettlement() {
     showScreen('settlementScreen');
 
-    // 显示结果
-    document.getElementById('resultTitle').textContent = `你撑了${gameState.level - 1}关`;
+    var level = gameState.level - 1;
+    var percentage = Math.round((level / 7) * 100);
 
-    // 计算排名
-    const percentage = Math.round((gameState.level - 1) / 7 * 100);
-    document.getElementById('resultSubtitle').textContent = `超越了${percentage}%的玩家`;
+    // 显示结果
+    document.getElementById('resultTitle').textContent = '你撑了' + level + '关';
+    document.getElementById('resultSubtitle').textContent = '超越了' + percentage + '%的玩家';
+
+    // 显示称号
+    var shameTag = getShameTag(level, gameState);
+    document.getElementById('shameTag').textContent = shameTag;
 
     // 显示统计
-    document.getElementById('finalCash').textContent = `${gameState.cash.toFixed(1)}万`;
+    document.getElementById('finalCash').textContent = gameState.cash.toFixed(1) + '万';
     document.getElementById('maxStress').textContent = Math.round(gameState.maxStress);
 
+    // 生成并显示分享预览
+    var shareText = generateShareText();
+    document.getElementById('sharePreview').textContent = shareText;
+
     // 显示耻辱时刻
-    const momentsList = document.getElementById('momentsList');
+    var momentsList = document.getElementById('momentsList');
     momentsList.innerHTML = '';
 
-    const topMoments = gameState.moments.slice(0, 3);
-    topMoments.forEach(moment => {
-        const card = document.createElement('div');
+    var topMoments = gameState.moments.slice(0, 3);
+    topMoments.forEach(function(moment) {
+        var card = document.createElement('div');
         card.className = 'moment-card';
-        card.innerHTML = `
-            <div class="moment-header">
-                <span class="moment-title">第${moment.level}关: ${moment.title}</span>
-                <span class="moment-badge">${moment.impact}</span>
-            </div>
-            <p class="moment-desc">选择了${moment.choice}</p>
-        `;
+        card.innerHTML = '<div class="moment-header"><span class="moment-title">第' + moment.level + '关: ' + moment.title + '</span><span class="moment-badge">' + moment.impact + '</span></div><p class="moment-desc">选择了' + moment.choice + '</p>';
         momentsList.appendChild(card);
     });
 }
 
-// 分享结果
-function shareResult() {
+// 生成分享文本
+function generateShareText() {
     var level = gameState.level - 1;
     var percentage = Math.round((level / 7) * 100);
-
-    // 生成耻辱标签
     var shameTag = getShameTag(level, gameState);
 
-    // 生成分享文本
     var text = '【我还能撑多久？】\n\n';
     text += '🎮 我撑了 ' + level + ' 关！\n';
     text += '📊 超越了 ' + percentage + '% 的玩家\n';
     text += '🏷️ 获得称号：' + shameTag + '\n\n';
-
-    // 添加最终状态
     text += '💰 最终现金：' + gameState.cash.toFixed(1) + '万\n';
     text += '💣 最高压力：' + Math.round(gameState.maxStress) + '\n';
     text += '👑 尊严值：' + Math.round(gameState.dignity) + '\n';
     text += '🪞 身份值：' + Math.round(gameState.identity) + '\n\n';
 
-    // 添加最大耻辱时刻
     if (gameState.moments.length > 0) {
         text += '😱 最大耻辱：' + gameState.moments[0].title + '\n\n';
     }
 
     text += '你能做得更好吗？来挑战吧！';
+    return text;
+}
+
+// 分享结果
+function shareResult() {
+    var text = generateShareText();
 
     // 优先使用Web Share API（移动端）
     if (navigator.share) {
