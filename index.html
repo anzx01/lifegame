@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我还能撑多久？</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 开始页 -->
+    <div id="startScreen" class="screen active">
+        <div class="screen-content">
+            <div class="title-section">
+                <h1 class="main-title">我还能撑多久？</h1>
+                <p class="subtitle">测测你能苟多久？</p>
+            </div>
+            <div class="spacer"></div>
+            <div class="button-container">
+                <button class="btn-primary glow" onclick="showScreen('inputScreen')">开始游戏</button>
+                <p class="subtitle2">一场关于生存的黑色幽默</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 输入页 -->
+    <div id="inputScreen" class="screen">
+        <div class="screen-content">
+            <h2 class="screen-title">初始设定</h2>
+            <p class="screen-subtitle">设置你的初始状态</p>
+
+            <div class="input-fields">
+                <div class="input-field">
+                    <label>💰 初始现金 (万元)</label>
+                    <input type="number" id="initialCash" value="5" min="0" max="100">
+                </div>
+                <div class="input-field">
+                    <label>📈 月收入 (万元)</label>
+                    <input type="number" id="monthlyIncome" value="1.5" min="0" max="10" step="0.1">
+                </div>
+                <div class="input-field">
+                    <label>📉 月支出 (万元)</label>
+                    <input type="number" id="monthlyExpense" value="1.2" min="0" max="10" step="0.1">
+                </div>
+                <div class="input-field">
+                    <label>🪞 身份值 (0-100)</label>
+                    <input type="number" id="identityValue" value="70" min="0" max="100">
+                </div>
+            </div>
+
+            <div class="preview-section">
+                <p class="preview-title">预览仪表盘</p>
+                <div class="mini-dashboard">
+                    <div class="mini-bar">
+                        <span class="mini-icon">💰</span>
+                        <span class="mini-label">现金</span>
+                        <div class="mini-progress">
+                            <div class="mini-progress-fill" style="width: 70%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-primary glow" onclick="startGame()">继续</button>
+        </div>
+    </div>
+
+    <!-- 反愿景页 -->
+    <div id="antiVisionScreen" class="screen">
+        <div class="screen-content">
+            <h2 class="screen-title">这辈子最怕啥？</h2>
+            <p class="screen-subtitle">选择你的反愿景,它将影响游戏结局</p>
+
+            <div class="options-container">
+                <div class="option-card" onclick="selectAntiVision('debt')">
+                    <div class="option-icon" style="background: #FA541C;">💸</div>
+                    <h3 class="option-title">债主追杀</h3>
+                    <p class="option-desc">欠债还钱,天经地义。但如果还不起...</p>
+                </div>
+                <div class="option-card" onclick="selectAntiVision('dignity')">
+                    <div class="option-icon" style="background: #7C3AED;">🎭</div>
+                    <h3 class="option-title">街头乞讨</h3>
+                    <p class="option-desc">尊严扫地,在熟人面前伸手要钱</p>
+                </div>
+                <div class="option-card" onclick="selectAntiVision('identity')">
+                    <div class="option-icon" style="background: #2563EB;">👤</div>
+                    <h3 class="option-title">社会性死亡</h3>
+                    <p class="option-desc">身份崩塌,从此无人认识曾经的你</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 游戏循环页 -->
+    <div id="gameScreen" class="screen">
+        <div class="screen-content game-content">
+            <div class="top-bar">
+                <span class="level-text" id="levelText">第1关/7</span>
+                <span class="dice-text" id="diceText">🎲 运气: 4</span>
+            </div>
+
+            <div class="dashboard">
+                <div class="progress-bar">
+                    <div class="bar-header">
+                        <span class="bar-label">💰 现金</span>
+                        <span class="bar-value" id="cashValue">5.0万</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill cash-bar" id="cashBar" style="width: 70%"></div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="bar-header">
+                        <span class="bar-label">💣 压力</span>
+                        <span class="bar-value stress" id="stressValue">50/100</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill stress-bar" id="stressBar" style="width: 50%"></div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="bar-header">
+                        <span class="bar-label">👑 尊严</span>
+                        <span class="bar-value dignity" id="dignityValue">70/100</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill dignity-bar" id="dignityBar" style="width: 70%"></div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="bar-header">
+                        <span class="bar-label">🪞 身份</span>
+                        <span class="bar-value identity" id="identityValue">70/100</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill identity-bar" id="identityBar" style="width: 70%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <h3 class="event-title" id="eventTitle">职场阴间</h3>
+                <p class="event-desc" id="eventDesc">老板突然宣布降薪20%,理由是"公司困难"。但你看到他刚换了新车...</p>
+            </div>
+
+            <div class="choices-container">
+                <div class="choice-btn" onclick="makeChoice(0)">
+                    <span class="choice-label">A</span>
+                    <span class="choice-text" id="choiceA">忍气吞声,继续干</span>
+                    <span class="choice-impact" id="impactA">💣+15</span>
+                </div>
+                <div class="choice-btn" onclick="makeChoice(1)">
+                    <span class="choice-label">B</span>
+                    <span class="choice-text" id="choiceB">跳槽找新工作</span>
+                    <span class="choice-impact neutral" id="impactB">💰+?</span>
+                </div>
+                <div class="choice-btn" onclick="makeChoice(2)">
+                    <span class="choice-label">C</span>
+                    <span class="choice-text" id="choiceC">舔老板保住工作</span>
+                    <span class="choice-impact dignity" id="impactC">👑-15</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 结算页 -->
+    <div id="settlementScreen" class="screen">
+        <div class="screen-content">
+            <h1 class="result-title" id="resultTitle">你撑了5关</h1>
+            <p class="result-subtitle" id="resultSubtitle">超越了62%的玩家</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value danger" id="finalCash">0.8万</div>
+                    <div class="stat-label">最终现金</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value danger" id="maxStress">95</div>
+                    <div class="stat-label">最高压力</div>
+                </div>
+            </div>
+
+            <div class="moments-section">
+                <h3 class="moments-title">Top 3 耻辱时刻</h3>
+                <div id="momentsList"></div>
+            </div>
+
+            <div class="buttons-container">
+                <button class="btn-primary glow" onclick="shareResult()">分享战绩</button>
+                <button class="btn-secondary" onclick="restartGame()">再来一局</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
