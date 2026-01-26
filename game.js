@@ -343,7 +343,30 @@ function showSettlement() {
 
 // 分享结果
 function shareResult() {
-    var text = '我在"我还能撑多久？"中撑了' + (gameState.level - 1) + '关！你能做得更好吗？';
+    var level = gameState.level - 1;
+    var percentage = Math.round((level / 7) * 100);
+
+    // 生成耻辱标签
+    var shameTag = getShameTag(level, gameState);
+
+    // 生成分享文本
+    var text = '【我还能撑多久？】\n\n';
+    text += '🎮 我撑了 ' + level + ' 关！\n';
+    text += '📊 超越了 ' + percentage + '% 的玩家\n';
+    text += '🏷️ 获得称号：' + shameTag + '\n\n';
+
+    // 添加最终状态
+    text += '💰 最终现金：' + gameState.cash.toFixed(1) + '万\n';
+    text += '💣 最高压力：' + Math.round(gameState.maxStress) + '\n';
+    text += '👑 尊严值：' + Math.round(gameState.dignity) + '\n';
+    text += '🪞 身份值：' + Math.round(gameState.identity) + '\n\n';
+
+    // 添加最大耻辱时刻
+    if (gameState.moments.length > 0) {
+        text += '😱 最大耻辱：' + gameState.moments[0].title + '\n\n';
+    }
+
+    text += '你能做得更好吗？来挑战吧！';
 
     // 优先使用Web Share API（移动端）
     if (navigator.share) {
@@ -361,6 +384,33 @@ function shareResult() {
     } else {
         // 桌面端使用剪贴板
         copyToClipboard(text);
+    }
+}
+
+// 获取耻辱标签
+function getShameTag(level, state) {
+    // 根据关卡数和状态生成标签
+    if (level >= 7) {
+        return '🏆 生存大师';
+    } else if (level >= 5) {
+        return '💪 顽强求生者';
+    } else if (level >= 3) {
+        return '😅 勉强撑住';
+    } else if (level >= 1) {
+        return '😭 速死玩家';
+    } else {
+        return '💀 秒杀选手';
+    }
+
+    // 根据失败原因添加额外标签
+    if (state.cash <= 0) {
+        return '💸 破产专家';
+    } else if (state.stress >= 100) {
+        return '💣 压力爆表';
+    } else if (state.dignity <= 0) {
+        return '🎭 尊严扫地';
+    } else if (state.identity <= 0) {
+        return '👻 社会性死亡';
     }
 }
 
