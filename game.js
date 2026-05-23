@@ -1,3 +1,7 @@
+// 我还能撑多久？ - 黑色幽默生存模拟游戏
+// Copyright (c) 2026 anzx01
+// Licensed under the MIT License - https://opensource.org/licenses/MIT
+
 // 游戏状态
 let gameState = {
     cash: 5,
